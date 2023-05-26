@@ -54,10 +54,12 @@ const userController = {
   },
   getUser: (req, res, next) => {
     return User.findByPk(req.params.id, {
-      include: {
-        model: Comment,
-        include: Restaurant,
-      },
+      include: [
+        { model: Comment, include: Restaurant },
+        { model: Restaurant, as: "FavoritedRestaurants" },
+        { model: User, as: "Followers" },
+        { model: User, as: "Followings" },
+      ],
       order: [[Comment, "id", "DESC"]],
       nest: true,
     })
@@ -69,8 +71,10 @@ const userController = {
             res.redirect(`/users/${req.user.id}`);
           }
         }
+        const isFollowed = req.user.Followings.some((f) => f.id === user.id);
         return res.render("users/profile", {
           user: user.toJSON(),
+          isFollowed,
         });
       })
       .catch((err) => next(err));
