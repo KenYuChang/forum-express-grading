@@ -109,7 +109,10 @@
           </div>
           <div class="card-body">
             {{#each user.Comments}}
-              <a href="/restaurants/{{this.id}}" class="text-decoration-none">
+              <a
+                href="/restaurants/{{this.Restaurant.id}}"
+                class="text-decoration-none"
+              >
                 <img
                   src={{this.Restaurant.image}}
                   width="80"
